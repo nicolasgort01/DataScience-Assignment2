@@ -1,0 +1,67 @@
+---
+title: "An informative title for your assignment"
+author: |
+  | Name 1 (xx%), Name 2 (xx%)
+  | Name 3 (xx%), Name 4 (xx%)
+date: "Month, 2025"
+header-includes:
+  - \usepackage{booktabs}
+  - \usepackage{makecell}
+output:
+  pdf_document:
+subtitle: FEM11149 - Introduction to Data Science
+editor_options:
+  chunk_output_type: inline
+urlcolor: blue
+linkcolor: red
+bibliography: references.bib
+---
+
+# Introduction
+
+This is a template that you can use for your assignment report. Note that you are not supposed to change the layout (margins, font size). Check Canvas for tips on how to write reports in RMarkdown and check the assignment requirements.
+
+# 1. Header 1
+
+Text for under header 1.
+
+# 2. Header 2
+
+Text for under header 2. The code below does not appear in the compiled pdf and is not evaluated because of the options `echo = FALSE` and `eval = FALSE`, respectively.
+
+```{r, echo = FALSE, eval = FALSE, warning = FALSE, message = FALSE}
+# Directory setup
+path = dirname(rstudioapi::getSourceEditorContext()$path) # Path is directory of this file
+setwd(path)                                               # Set working directory
+```
+
+# 3. Having a bibliography file
+
+In case you use references, you can include them in the RMarkdown file in an automatic way. You see on Canvas a file named `references.bib`, and the file is being called on the header of the `*.rmd` document that generated the pdf. If you open the bib file (you can use either a TeX editor or notepad) you will see a single reference, that has a [BibTeX](https://www.economics.utoronto.ca/osborne/latex/BIBTEX.HTM) format. 
+
+```{}
+@book{ISL,
+  title={An introduction to statistical learning},
+  author={James, Gareth and Witten, Daniela and Hastie, Trevor and Tibshirani, Robert},
+  volume={112},
+  year={2013},
+  publisher={Springer}
+}
+```
+
+The first thing that appear after the bracket is the alias that you use to 'call' the book in your text. In RMarkdown, you need to use the `@` sign, followed by this alias:`[@ISL]` results in [@ISL]. When you call a reference, RMarkdown will automatically add it in the very end of the document. So we recommend to end your file with a title format for references (even if not is being displayed in your code, it will appear after kniting the file).
+
+You can check on top of this file how the header is organized and where the file with references is being called.
+
+To get a citation already in BibTeX format, you can search for the book or paper in Google Scholar, then click on the quotes that appear below the reference, and click in BibTeX on the pop-up. This will go to another page with only the code, that you can copy and paste in your `references.bib` file.
+
+If you do not want to use a bibliography, then just don't call any reference in the file and erase in the header the command calling `references.bib`.
+
+
+# 3. Conclusions
+
+You might need more sections than three.
+
+
+# References
+
