@@ -126,4 +126,6 @@ my_boot_pca <- function(x, ind){
 }
 
 fit.boot  <- boot(data = X_train_PCA, statistic = my_boot_pca, R = 1000)
-eigs.boot <- fit.boot$t         
+eigs.boot <- fit.boot$t    
+
+yes

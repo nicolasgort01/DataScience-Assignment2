@@ -1,20 +1,24 @@
 ---
 title: "something"
-author:  |
+subtitle: "FEM11149 - Introduction to Data Science"
+author: |
   | Maya Archer 623099 (25%), Nicolas Gonzalez Gort 780037 (25%)
   | Rishi Ashok Kumar 560527 (25%), Saumya Bothra 595402 (25%)
+output:
+  pdf_document:
+    latex_engine: xelatex
+    keep_tex: true
 header-includes:
   - \usepackage{booktabs}
   - \usepackage{makecell}
-output: 
-  pdf_document:
-    latex_engine: xelatex
-subtitle: FEM11149 - Introduction to Data Science
+  - \usepackage{float}
+  - \usepackage[section]{placeins}
+  - \usepackage{hyperref}
+  - \hypersetup{colorlinks=true, urlcolor=blue, linkcolor=red}
 editor_options:
   chunk_output_type: inline
-urlcolor: blue
-linkcolor: red
 ---
+
 
 ```{r setup, include = FALSE, message=FALSE, warning=FALSE} 
  knitr::opts_chunk$set(echo=FALSE, message=FALSE, warning=FALSE)
@@ -26,11 +30,11 @@ library(dplyr)
 library(stringr)
 rm(list = ls())
 # Directory setup
-path = dirname(rstudioapi::getSourceEditorContext()$path) # Path is directory of this file
-setwd(path) 
+#path = dirname(rstudioapi::getSourceEditorContext()$path) # Path is directory of this file
+#setwd(path) 
 # no scientific notations
 options(scipen = 999)
-data <- read.csv("~/Desktop/Group Assignment IDS/a2_data_group_9.csv")
+data <- read.csv("a2_data_group_9.csv")
 names(data)
 
 # Preprocessing
@@ -109,19 +113,19 @@ print(correlations)
 
 # 2) Plot ALL variables
 num_vars <- ncol(X_corr)
-par(mfrow = c(4, 5))   # 4 rows × 5 columns grid (enough for 17 plots)
-
-for (col in names(correlations)) {
-  x <- X_corr[[col]]
-  plot(x, y_corr,
-       main = paste("Next-day Max Temp vs", col),
-       xlab = col,
-       ylab = "Next-day Max Temp (°C)",
-       pch = 19, col = "darkblue")
-  abline(lm(y_corr ~ x), col = "red", lwd = 2)
-}
-
-par(mfrow = c(1, 1))  # reset plotting layout
+# par(mfrow = c(4, 5))   # 4 rows × 5 columns grid (enough for 17 plots)
+# 
+# for (col in names(correlations)) {
+#   x <- X_corr[[col]]
+#   plot(x, y_corr,
+#        main = paste("M vs", col),
+#        xlab = col,
+#        ylab = "Next-day (°C)",
+#        pch = 19, col = "darkblue")
+#   abline(lm(y_corr ~ x), col = "red", lwd = 2)
+# }
+# 
+# par(mfrow = c(1, 1))  # reset plotting layout
 ```
 
 ```{r corr-barplot, results='hide', fig.width=9, fig.height=6}
@@ -140,29 +144,29 @@ corr_df <- tibble(
     label = factor(label, levels = rev(label))  # keep sorted order
   )
 
-# Plot
-ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
-  geom_col(width = 0.75) +
-  geom_hline(yintercept = 0, color = "black", linewidth = 0.7) +
-  coord_flip() +
-  labs(
-    title = "Correlation with Next-day Max Temperature",
-    x = NULL,
-    y = "Pearson correlation"
-  ) +
-  scale_fill_manual(values = c("TRUE" = "#3B82F6", "FALSE" = "#EF4444")) +
-  scale_y_continuous(
-    limits = c(-1, 1),
-    breaks = seq(-1, 1, 0.2)
-  ) +
-  theme_minimal(base_size = 13) +
-  theme(
-    legend.position = "none",      # remove legend
-    panel.grid.major.y = element_blank(),
-    panel.grid.minor = element_blank(),
-    plot.title = element_text(face = "bold", hjust = 0.5),
-    axis.text.y = element_text(size = 10)
-  )
+# # Plot
+# ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
+#   geom_col(width = 0.75) +
+#   geom_hline(yintercept = 0, color = "black", linewidth = 0.7) +
+#   coord_flip() +
+#   labs(
+#     title = "Correlation with Next-day Max Temperature",
+#     x = NULL,
+#     y = "Pearson correlation"
+#   ) +
+#   scale_fill_manual(values = c("TRUE" = "#3B82F6", "FALSE" = "#EF4444")) +
+#   scale_y_continuous(
+#     limits = c(-1, 1),
+#     breaks = seq(-1, 1, 0.2)
+#   ) +
+#   theme_minimal(base_size = 13) +
+#   theme(
+#     legend.position = "none",      # remove legend
+#     panel.grid.major.y = element_blank(),
+#     panel.grid.minor = element_blank(),
+#     plot.title = element_text(face = "bold", hjust = 0.5),
+#     axis.text.y = element_text(size = 10)
+#   )
 ```
 
 
@@ -204,16 +208,6 @@ summary(pca_model)
 round(pca_model$rotation,2)  
 ```
 
-
-```{r choose-k, results='hide', fig.width=8, fig.height=5}
-# --- 6. 2 methods to find the the optimal number of PC ---
-
-# 1. Visualize variance explained 
-op <- par(mar = c(5, 5, 2, 1) + 0.1)           # bigger margins: bottom, left, top, right
-plot(pca_model, type = "b", main = "Scree Plot",
-     xlim = c(0.5, length(pca_model$sdev) + 0.5))  # pad the ends so bars/points aren’t clipped
-par(op)
-```
 
 ```{r kaiser-vaf, results='hide'}
 # 2. Eigenvalues (variances of PCs) and explained variance
@@ -652,7 +646,7 @@ Two design choices likely shaped this outcome and point to refinements. First, P
 
 ## Appendix A
 
-\begin{table}[!htbp]\centering
+\begin{table}[H]\centering
 \caption{Correlations with Next-day Maximum Temperature}
 \label{tab:A1}
 \begin{tabular}{lc}
@@ -817,11 +811,72 @@ G10 (hottest) &  &  \\
 ## Appendix B
 
 
-```{r, echo=FALSE, fig.width=8, fig.height=5}
+```{r echo=FALSE, fig.cap="Correlation Scatter Plots", fig.pos= 'H', out.width='0.82%', out.extra='keepaspectratio'}
+# local({
+#   op <- par(no.readonly = TRUE); on.exit(par(op), add = TRUE)
+# 
+#   par(mfrow = c(6, 3),
+#       mar = c(3, 3, 3, 1),  
+#       oma = c(0, 0, 0, 0),     # outer margins a 0
+#       mgp = c(1.3, 0.4, 0))    # distancia de ejes/labels
+# 
+#   for (col in names(correlations)) {
+#     x <- X_corr[[col]]
+#     y <- y_corr
+#     ok <- is.finite(x) & is.finite(y); x <- x[ok]; y <- y[ok]
+# 
+#     plot(x, y,
+#          main = paste("Next-day Max Temp vs", col),
+#          xlab = col, ylab = "Next-day Max Temp (°C)",
+#          pch = 16, cex = 0.5, col = rgb(0,0,0.55,0.25))
+#     abline(lm(y ~ x), col = rgb(0.8,0,0,0.9), lwd = 1.4)
+#   }
+# })
 
+knitr::include_graphics("scatterplot.png")
+```
+
+```{r fig.cap="Pearson Correlation", fig.pos= 'H'}
+# Plot
+ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
+  geom_col(width = 0.75) +
+  geom_hline(yintercept = 0, color = "black", linewidth = 0.7) +
+  coord_flip() +
+  labs(
+    title = "Correlation with Next-day Max Temperature",
+    x = NULL,
+    y = "Pearson correlation"
+  ) +
+  scale_fill_manual(values = c("TRUE" = "#3B82F6", "FALSE" = "#EF4444")) +
+  scale_y_continuous(
+    limits = c(-1, 1),
+    breaks = seq(-1, 1, 0.2)
+  ) +
+  theme_classic(base_size = 13) +
+  theme(
+    legend.position = "none",      # remove legend
+    panel.grid.major.y = element_blank(),
+    panel.grid.minor = element_blank(),
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    axis.text.y = element_text(size = 10)
+  )
+```
+```{r fig.cap="Pearson Correlation", fig.pos= 'H'}
+# --- 6. 2 methods to find the the optimal number of PC ---
+
+# 1. Visualize variance explained 
+op <- par(mar = c(5, 5, 2, 1) + 0.1)           # bigger margins: bottom, left, top, right
+plot(pca_model, type = "b", main = "Scree Plot",
+     xlim = c(0.5, length(pca_model$sdev) + 0.5))  # pad the ends so bars/points aren’t clipped
+par(op)
 ```
 
 
+
+
+
+\FloatBarrier
+\clearpage
 
 ## Appendix C
 
