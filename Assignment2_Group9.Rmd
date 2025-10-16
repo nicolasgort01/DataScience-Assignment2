@@ -1,5 +1,5 @@
 ---
-title: "something"
+title: "Dimensionality Reduction and Forecast Accuracy: A PCA Approach to Short-Horizon Temperature Prediction"
 subtitle: "FEM11149 - Introduction to Data Science"
 author: |
   | Maya Archer 623099 (25%), Nicolas Gonzalez Gort 780037 (25%)
@@ -7,6 +7,7 @@ author: |
 output:
   pdf_document:
     latex_engine: xelatex
+    fig_caption: true
     keep_tex: true
 header-includes:
   - \usepackage{booktabs}
@@ -29,6 +30,14 @@ library(ggplot2)
 library(dplyr)
 library(stringr)
 rm(list = ls())
+knitr::opts_chunk$set(
+  fig.align = "center",
+  fig.pos = "H",
+  out.width = "80%",
+  fig.width = 7,
+  fig.height = 4,
+  dpi = 300)
+
 # Directory setup
 #path = dirname(rstudioapi::getSourceEditorContext()$path) # Path is directory of this file
 #setwd(path) 
@@ -126,6 +135,46 @@ num_vars <- ncol(X_corr)
 # }
 # 
 # par(mfrow = c(1, 1))  # reset plotting layout
+
+# 2) Data para facetas (larga)
+vars_ordered <- names(correlations)
+
+plot_df <- X_corr %>%
+  dplyr::select(all_of(vars_ordered)) %>%
+  mutate(`Next-day (°C)` = y_corr) %>%
+  pivot_longer(cols = all_of(vars_ordered),
+               names_to = "variable",
+               values_to = "x")
+
+# 3) Etiquetas con r para cada panel
+lab_map <- setNames(
+  paste0(vars_ordered, " (r = ", sprintf("%.2f", correlations), ")"),
+  vars_ordered
+)
+
+# 4) Gráfico facetado
+p <- ggplot(plot_df, aes(x = x, y = `Next-day (°C)`)) +
+  geom_point(alpha = 0.35, size = 0.6) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
+  facet_wrap(~ variable,
+             labeller = as_labeller(lab_map),
+             scales = "free_x",
+             nrow = 6) +              
+  labs(
+    title = "Relationship with Temperature Next Day",
+    x = NULL,
+    y = "Next-day (°C)"
+  ) +
+  theme_classic(base_size = 12) +
+  theme(
+    plot.title = element_text(hjust = 0.5, size = 20, face = "bold", margin = margin(b = 10)),
+    strip.text = element_text(size = 12, face = "bold"),
+    axis.text  = element_text(size = 9),
+    axis.title.y = element_text(size = 12, face = "bold"),
+    panel.spacing = unit(8, "pt")
+  )
+
+
 ```
 
 ```{r corr-barplot, results='hide', fig.width=9, fig.height=6}
@@ -193,9 +242,9 @@ X_train <- X[1:k, , drop = FALSE]; y_train <- y[1:k]
 X_test  <- X[(k+1):n, , drop = FALSE]; y_test <- y[(k+1):n]
 ```
 
-To avoid look-ahead bias, we estimated Principal Components Analysis only on the training dataset and froze its rotation and scaling. Figure X shows a sharp elbow with eigenvalues for PC1-PC4 of 8.82, 3.46, 1.59, 1.00, respectively (Table 2). By the third component we already explain about 82% of the variance, with only a small gain if a fourth is added (up to 88%), which can be seen in Table 3. The two selection rules point in slightly different directions: Kaiser would keep 4 components, while parallel analysis (permutation cut-offs) is more conservative with k = 3. Balancing parsimony and coverage, we adopt 3 components as the baseline for prediction and treat the fourth as an optional robustness check. 
+To avoid look-ahead bias, we estimated Principal Components Analysis only on the training dataset and froze its rotation and scaling. Figure 3 shows a sharp elbow with eigenvalues for PC1-PC4 of 8.82, 3.46, 1.59, 1.00, respectively (Table 2). By the third component we already explain about 82% of the variance, with only a small gain if a fourth is added (up to 88%), which can be seen in Table 3. The two selection rules point in slightly different directions: Kaiser would keep 4 components, while parallel analysis (permutation cut-offs) is more conservative with k = 3. Balancing parsimony and coverage, we adopt 3 components as the baseline for prediction and treat the fourth as an optional robustness check. 
 
-```{r pca, results='hide', fig.width=8, fig.height=5}
+```{r pca, fig.height=5, fig.width=8, include=FALSE, results='hide'}
 # --- 4. Generate PC on X_train ---
 
 # 1. Perform PCA *only* on training data
@@ -230,7 +279,7 @@ k_vaf
 cum_var
 ```
 
-```{r parallel-analysis, results='hide', message=FALSE, warning=FALSE, fig.width=8, fig.height=5}
+```{r parallel-analysis, fig.height=5, fig.width=8, message=FALSE, warning=FALSE, include=FALSE, results='hide'}
 # 4
 source("permtestPCA.R")          # Load the permtestPCA() function
 perm_range <- permtestPCA(X_train)
@@ -309,11 +358,10 @@ perm_range <- perm_parallel_pca(X_train)
 ```
 
 
-```{r biplots, results='hide', message=FALSE, warning=FALSE, fig.width=7, fig.height=5}
-# --- 7. 2 Construct the biplots ---
+```{r biplots, fig.height=5, fig.width=7, message=FALSE, warning=FALSE, include=FALSE, results='hide'}
 
 # Biplot of first 2 PCs
-biplot(pca_model, scale = 0)
+# biplot(pca_model, scale = 0)
 
 library(factoextra)
 library(ggplot2)
@@ -337,13 +385,13 @@ p12 <- fviz_pca_biplot(
   pointsize = 0.6
 ) +
   coord_fixed() +
-  theme_minimal(base_size = 12) +
+  theme_classic(base_size = 12) +
   theme(
     panel.grid.minor = element_blank(),
     legend.position = "none"
   ) +
   labs(title = "Biplot Components 1 and 2", x = "Comp.1", y = "Comp.2")
-p12
+# p12
 
 # B. PC2 vs PC3
 p23 <- fviz_pca_biplot(
@@ -358,7 +406,7 @@ p23 <- fviz_pca_biplot(
   pointsize = 0.6
 ) +
   coord_fixed() +
-  theme_minimal(base_size = 12) +
+  theme_classic(base_size = 12) +
   theme(
     panel.grid.minor = element_blank(),
     legend.position = "none"
@@ -366,7 +414,7 @@ p23 <- fviz_pca_biplot(
   labs(title = "Biplot Components 2 and 3", x = "Comp.1", y = "Comp.2")
 
 # Side-by-side layout
-p12 + p23
+# p12 + p23
 
 # Loadings
 loadings <- pca_model$rotation
@@ -413,21 +461,21 @@ list(
 df_boot <- data.frame(vaf = vaf_boot)
 
 # Plot density + CI + point estimate
-ggplot(df_boot, aes(x = vaf)) +
-  geom_histogram(aes(y = ..density..),
-                 bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
-  geom_density(color = "darkblue", linewidth = 1) +
-  geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
-  geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
-  geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
-  labs(
-    title = "Bootstrap distribution of total variance explained (first 4 PCs)",
-    x = "Total variance explained",
-    y = "Density",
-    subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
-                       100*vaf_k_hat, 100*ci[1], 100*ci[2])
-  ) +
-  theme_minimal(base_size = 13)
+# ggplot(df_boot, aes(x = vaf)) +
+#   geom_histogram(aes(y = ..density..),
+#                  bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
+#   geom_density(color = "darkblue", linewidth = 1) +
+#   geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
+#   geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
+#   geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
+#   labs(
+#     title = "Bootstrap distribution of total variance explained (first 4 PCs)",
+#     x = "Total variance explained",
+#     y = "Density",
+#     subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
+#                        100*vaf_k_hat, 100*ci[1], 100*ci[2])
+#   ) +
+#   theme_minimal(base_size = 13)
 ```
 
 Table 6 presents the results of our Principal Component Regression (PCR) on the training set. Cross-validated RMSEP drops from 2.31 to 2.24, and finally to 2.06 when moving from 1 to 3 components, and changes only marginally at 4 components (2.05), indicating diminishing returns beyond k = 3. As a benchmark, we fit a standard multiple linear regression (OLS) to the original predictors. On the held-out test data, OLS achieves a lower RMSE (1.80) than PCR with k = 3 (2.16). PCR’s $R^2$ value is high on both train and test datasets, but the absolute error is slightly larger than OLS in this split. This suggests that, for this horizon and feature set, compressing predictors with unsupervised PCA does not by itself improve point prediction accuracy over a well-specified linear model. This is consistent with expectations given (1) the near-linear relations between thermal and radiative predictors and next-day maxima and (2) inclusion of same-day max_temperature_c as a strong lagged signal that supervised OLS can exploit directly, whereas unsupervised PCA is not optimized for the target.
@@ -480,15 +528,15 @@ summary_list <- list(
 print(summary_list)
 
 # 8) Plot the bootstrap distribution
-hist(vaf_boot,
-     breaks = 30,
-     main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
-     xlab = "VAF (Variance Accounted For)",
-     col = "skyblue", border = "white")
-abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
-abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
-legend("topright", legend = c("Point Estimate", "95% CI"),
-       col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
+# hist(vaf_boot,
+#      breaks = 30,
+#      main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
+#      xlab = "VAF (Variance Accounted For)",
+#      col = "skyblue", border = "white")
+# abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
+# abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
+# legend("topright", legend = c("Point Estimate", "95% CI"),
+#        col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
 
 ####
 
@@ -625,16 +673,16 @@ rmse_long <- rmse_by_group %>%
                       values_to = "RMSE")
 
 # Plot
-ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
-  geom_line(size = 1.2) +
-  geom_point(size = 2) +
-  theme_minimal() +
-  labs(
-    title = "RMSE by temperature decile (test data)",
-    x = "Decile group (based on observed max temperature)",
-    y = "RMSE",
-    color = "Model"
-  )
+# ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
+#   geom_line(size = 1.2) +
+#   geom_point(size = 2) +
+#   theme_minimal() +
+#   labs(
+#     title = "RMSE by temperature decile (test data)",
+#     x = "Decile group (based on observed max temperature)",
+#     y = "RMSE",
+#     color = "Model"
+#   )
 ```
 
 # Conclusion and Discussion
@@ -810,33 +858,11 @@ G10 (hottest) &  &  \\
 
 ## Appendix B
 
-
-```{r echo=FALSE, fig.cap="Correlation Scatter Plots", fig.pos= 'H', out.width='0.82%', out.extra='keepaspectratio'}
-# local({
-#   op <- par(no.readonly = TRUE); on.exit(par(op), add = TRUE)
-# 
-#   par(mfrow = c(6, 3),
-#       mar = c(3, 3, 3, 1),  
-#       oma = c(0, 0, 0, 0),     # outer margins a 0
-#       mgp = c(1.3, 0.4, 0))    # distancia de ejes/labels
-# 
-#   for (col in names(correlations)) {
-#     x <- X_corr[[col]]
-#     y <- y_corr
-#     ok <- is.finite(x) & is.finite(y); x <- x[ok]; y <- y[ok]
-# 
-#     plot(x, y,
-#          main = paste("Next-day Max Temp vs", col),
-#          xlab = col, ylab = "Next-day Max Temp (°C)",
-#          pch = 16, cex = 0.5, col = rgb(0,0,0.55,0.25))
-#     abline(lm(y ~ x), col = rgb(0.8,0,0,0.9), lwd = 1.4)
-#   }
-# })
-
-knitr::include_graphics("scatterplot.png")
+```{r fig.cap= 'Scatter Correlations', fig.width=15, fig.height=15, dpi=600}
+p
 ```
 
-```{r fig.cap="Pearson Correlation", fig.pos= 'H'}
+```{r fig.cap="Pearson Correlation"}
 # Plot
 ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
   geom_col(width = 0.75) +
@@ -861,7 +887,7 @@ ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
     axis.text.y = element_text(size = 10)
   )
 ```
-```{r fig.cap="Pearson Correlation", fig.pos= 'H'}
+```{r fig.cap="Scree Plot"}
 # --- 6. 2 methods to find the the optimal number of PC ---
 
 # 1. Visualize variance explained 
@@ -870,13 +896,69 @@ plot(pca_model, type = "b", main = "Scree Plot",
      xlim = c(0.5, length(pca_model$sdev) + 0.5))  # pad the ends so bars/points aren’t clipped
 par(op)
 ```
+```{r fig.cap="Permutation Test"}
+perm_range <- permtestPCA(X_train)
+```
 
+```{r fig.cap=' Biplot Components 1-2'}
+p12
+```
 
+```{r fig.cap='Biplot all Components'}
+p12 + p23
+```
 
+```{r fig.cap= 'Biplot of the first two components', fig.width= 20, dpi= 300, fig.height=20}
+biplot(pca_model, scale = 0)
 
+```
+```{r fig.cap= 'Optimal Visualization'}
+fviz_pca_biplot(pca_model)
+```
 
-\FloatBarrier
-\clearpage
+```{r fig.cap='Plot density + CI + point estimate'}
+ggplot(df_boot, aes(x = vaf)) +
+  geom_histogram(aes(y = ..density..),
+                 bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
+  geom_density(color = "darkblue", linewidth = 1) +
+  geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
+  geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
+  geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
+  labs(
+    title = "Bootstrap distribution of total variance explained (first 4 PCs)",
+    x = "Total variance explained",
+    y = "Density",
+    subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
+                       100*vaf_k_hat, 100*ci[1], 100*ci[2])
+  ) +
+  theme_classic(base_size = 13)
+```
+
+```{r fig.cap= 'Boostrap Distribution'}
+hist(vaf_boot,
+     breaks = 30,
+     main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
+     xlab = "VAF (Variance Accounted For)",
+     col = "skyblue", border = "white")
+abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
+abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
+legend("topright", legend = c("Point Estimate", "95% CI"),
+       col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
+```
+
+```{r fig.cap= 'RMSE by temperature decile' }
+ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
+  geom_line(size = 1.2) +
+  geom_point(size = 2) +
+  theme_classic() +
+  labs(
+    title = "RMSE by temperature decile (test data)",
+    x = "Decile group (based on observed max temperature)",
+    y = "RMSE",
+    color = "Model"
+  )
+```
+
 
 ## Appendix C
 

@@ -66,11 +66,12 @@
 \IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
 \urlstyle{same}
 \hypersetup{
-  pdftitle={something},
+  pdftitle={Dimensionality Reduction and Forecast Accuracy: A PCA Approach to Short-Horizon Temperature Prediction},
   hidelinks,
   pdfcreator={LaTeX via pandoc}}
 
-\title{something}
+\title{Dimensionality Reduction and Forecast Accuracy: A PCA Approach to
+Short-Horizon Temperature Prediction}
 \usepackage{etoolbox}
 \makeatletter
 \providecommand{\subtitle}[1]{% add subtitle to \maketitle
@@ -233,13 +234,6 @@ k = 3. Balancing parsimony and coverage, we adopt 3 components as the
 baseline for prediction and treat the fourth as an optional robustness
 check.
 
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/parallel-analysis-1.pdf}}
-
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/biplots-1.pdf}}
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/biplots-2.pdf}}
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/biplots-3.pdf}}
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/biplots-4.pdf}}
-
 Table 5 shows the PCA reduction of weather variables into three
 interpretable dimensions. The first component acts like a
 ``seasonality/heat'' axis: it loads in the same direction on actual and
@@ -267,8 +261,6 @@ account for about 82\% of the variance (bootstrap 95\% CI =
 81.1--82.1\%), so the dimensionality reduction is reliable and not
 driven by a particular sample split.
 
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/bootstrap-1.pdf}}
-
 Table 6 presents the results of our Principal Component Regression (PCR)
 on the training set. Cross-validated RMSEP drops from 2.31 to 2.24, and
 finally to 2.06 when moving from 1 to 3 components, and changes only
@@ -286,8 +278,6 @@ and next-day maxima and (2) inclusion of same-day max\_temperature\_c as
 a strong lagged signal that supervised OLS can exploit directly, whereas
 unsupervised PCA is not optimized for the target.
 
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/models-1.pdf}}
-
 Because PCA optimizes total variance, not tail loss, it can under-weight
 rare extremes even if those are operationally important. That limitation
 motivates our final check: grouping test observations into deciles by
@@ -298,8 +288,6 @@ profiles are not strongly dependent on the heat level in this split; if
 tail fidelity becomes a priority, one could consider quantile or
 weighted regression, EVT-informed losses, or nonlinear terms (e.g.,
 splines for radiation or seasonality).
-
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/deciles-1.pdf}}
 
 \section{Conclusion and Discussion}\label{conclusion-and-discussion}
 
@@ -501,14 +489,100 @@ G10 (hottest) &  &  \\
 \subsection{Appendix B}\label{appendix-b}
 
 \begin{figure}[H]
-\includegraphics[width=0.0082\linewidth,keepaspectratio]{scatterplot} \caption{Correlation Scatter Plots}\label{fig:unnamed-chunk-1}
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-1-1} 
+
+}
+
+\caption{Scatter Correlations}\label{fig:unnamed-chunk-1}
 \end{figure}
 
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/unnamed-chunk-2-1.pdf}}
-\pandocbounded{\includegraphics[keepaspectratio]{Assignment2_Group9_files/figure-latex/unnamed-chunk-3-1.pdf}}
+\begin{figure}[H]
 
-\FloatBarrier
-\clearpage
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-2-1} 
+
+}
+
+\caption{Pearson Correlation}\label{fig:unnamed-chunk-2}
+\end{figure}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-3-1} 
+
+}
+
+\caption{Scree Plot}\label{fig:unnamed-chunk-3}
+\end{figure}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-4-1} 
+
+}
+
+\caption{Permutation Test}\label{fig:unnamed-chunk-4}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-5-1} 
+
+}
+
+\caption{ Biplot Components 1-2}\label{fig:unnamed-chunk-5}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-6-1} 
+
+}
+
+\caption{Biplot all Components}\label{fig:unnamed-chunk-6}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-7-1} 
+
+}
+
+\caption{Biplot of the first two components}\label{fig:unnamed-chunk-7}
+\end{figure}
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-8-1} 
+
+}
+
+\caption{Optimal Visualization}\label{fig:unnamed-chunk-8}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-9-1} 
+
+}
+
+\caption{Plot density + CI + point estimate}\label{fig:unnamed-chunk-9}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-10-1} 
+
+}
+
+\caption{Boostrap Distribution}\label{fig:unnamed-chunk-10}
+\end{figure}
+
+\begin{figure}[H]
+
+{\centering \includegraphics[width=0.8\linewidth]{Assignment2_Group9_files/figure-latex/unnamed-chunk-11-1} 
+
+}
+
+\caption{RMSE by temperature decile}\label{fig:unnamed-chunk-11}
+\end{figure}
 
 \subsection{Appendix C}\label{appendix-c}
 
@@ -529,6 +603,14 @@ G10 (hottest) &  &  \\
 ## library(dplyr)
 ## library(stringr)
 ## rm(list = ls())
+## knitr::opts_chunk$set(
+##   fig.align = "center",
+##   fig.pos = "H",
+##   out.width = "80%",
+##   fig.width = 7,
+##   fig.height = 4,
+##   dpi = 300)
+## 
 ## # Directory setup
 ## #path = dirname(rstudioapi::getSourceEditorContext()$path) # Path is directory of this file
 ## #setwd(path) 
@@ -582,6 +664,46 @@ G10 (hottest) &  &  \\
 ## # }
 ## # 
 ## # par(mfrow = c(1, 1))  # reset plotting layout
+## 
+## # 2) Data para facetas (larga)
+## vars_ordered <- names(correlations)
+## 
+## plot_df <- X_corr %>%
+##   dplyr::select(all_of(vars_ordered)) %>%
+##   mutate(`Next-day (°C)` = y_corr) %>%
+##   pivot_longer(cols = all_of(vars_ordered),
+##                names_to = "variable",
+##                values_to = "x")
+## 
+## # 3) Etiquetas con r para cada panel
+## lab_map <- setNames(
+##   paste0(vars_ordered, " (r = ", sprintf("%.2f", correlations), ")"),
+##   vars_ordered
+## )
+## 
+## # 4) Gráfico facetado
+## p <- ggplot(plot_df, aes(x = x, y = `Next-day (°C)`)) +
+##   geom_point(alpha = 0.35, size = 0.6) +
+##   geom_smooth(method = "lm", se = FALSE, linewidth = 0.7) +
+##   facet_wrap(~ variable,
+##              labeller = as_labeller(lab_map),
+##              scales = "free_x",
+##              nrow = 6) +              
+##   labs(
+##     title = "Relationship with Temperature Next Day",
+##     x = NULL,
+##     y = "Next-day (°C)"
+##   ) +
+##   theme_classic(base_size = 12) +
+##   theme(
+##     plot.title = element_text(hjust = 0.5, size = 20, face = "bold", margin = margin(b = 10)),
+##     strip.text = element_text(size = 12, face = "bold"),
+##     axis.text  = element_text(size = 9),
+##     axis.title.y = element_text(size = 12, face = "bold"),
+##     panel.spacing = unit(8, "pt")
+##   )
+## 
+## 
 ## # 3) Correlation summary bar chart for the report
 ## 
 ## # correlations should already be a named numeric vector
@@ -743,10 +865,9 @@ G10 (hottest) &  &  \\
 ## }
 ## 
 ## perm_range <- perm_parallel_pca(X_train)
-## # --- 7. 2 Construct the biplots ---
 ## 
 ## # Biplot of first 2 PCs
-## biplot(pca_model, scale = 0)
+## # biplot(pca_model, scale = 0)
 ## 
 ## library(factoextra)
 ## library(ggplot2)
@@ -770,13 +891,13 @@ G10 (hottest) &  &  \\
 ##   pointsize = 0.6
 ## ) +
 ##   coord_fixed() +
-##   theme_minimal(base_size = 12) +
+##   theme_classic(base_size = 12) +
 ##   theme(
 ##     panel.grid.minor = element_blank(),
 ##     legend.position = "none"
 ##   ) +
 ##   labs(title = "Biplot Components 1 and 2", x = "Comp.1", y = "Comp.2")
-## p12
+## # p12
 ## 
 ## # B. PC2 vs PC3
 ## p23 <- fviz_pca_biplot(
@@ -791,7 +912,7 @@ G10 (hottest) &  &  \\
 ##   pointsize = 0.6
 ## ) +
 ##   coord_fixed() +
-##   theme_minimal(base_size = 12) +
+##   theme_classic(base_size = 12) +
 ##   theme(
 ##     panel.grid.minor = element_blank(),
 ##     legend.position = "none"
@@ -799,7 +920,7 @@ G10 (hottest) &  &  \\
 ##   labs(title = "Biplot Components 2 and 3", x = "Comp.1", y = "Comp.2")
 ## 
 ## # Side-by-side layout
-## p12 + p23
+## # p12 + p23
 ## 
 ## # Loadings
 ## loadings <- pca_model$rotation
@@ -841,21 +962,21 @@ G10 (hottest) &  &  \\
 ## df_boot <- data.frame(vaf = vaf_boot)
 ## 
 ## # Plot density + CI + point estimate
-## ggplot(df_boot, aes(x = vaf)) +
-##   geom_histogram(aes(y = ..density..),
-##                  bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
-##   geom_density(color = "darkblue", linewidth = 1) +
-##   geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
-##   geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
-##   geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
-##   labs(
-##     title = "Bootstrap distribution of total variance explained (first 4 PCs)",
-##     x = "Total variance explained",
-##     y = "Density",
-##     subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
-##                        100*vaf_k_hat, 100*ci[1], 100*ci[2])
-##   ) +
-##   theme_minimal(base_size = 13)
+## # ggplot(df_boot, aes(x = vaf)) +
+## #   geom_histogram(aes(y = ..density..),
+## #                  bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
+## #   geom_density(color = "darkblue", linewidth = 1) +
+## #   geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
+## #   geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
+## #   geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
+## #   labs(
+## #     title = "Bootstrap distribution of total variance explained (first 4 PCs)",
+## #     x = "Total variance explained",
+## #     y = "Density",
+## #     subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
+## #                        100*vaf_k_hat, 100*ci[1], 100*ci[2])
+## #   ) +
+## #   theme_minimal(base_size = 13)
 ## #####
 ## # Install/load boot if needed
 ## if (!requireNamespace("boot", quietly = TRUE)) install.packages("boot")
@@ -903,15 +1024,15 @@ G10 (hottest) &  &  \\
 ## print(summary_list)
 ## 
 ## # 8) Plot the bootstrap distribution
-## hist(vaf_boot,
-##      breaks = 30,
-##      main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
-##      xlab = "VAF (Variance Accounted For)",
-##      col = "skyblue", border = "white")
-## abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
-## abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
-## legend("topright", legend = c("Point Estimate", "95% CI"),
-##        col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
+## # hist(vaf_boot,
+## #      breaks = 30,
+## #      main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
+## #      xlab = "VAF (Variance Accounted For)",
+## #      col = "skyblue", border = "white")
+## # abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
+## # abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
+## # legend("topright", legend = c("Point Estimate", "95% CI"),
+## #        col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
 ## 
 ## ####
 ## 
@@ -1043,38 +1164,17 @@ G10 (hottest) &  &  \\
 ##                       values_to = "RMSE")
 ## 
 ## # Plot
-## ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
-##   geom_line(size = 1.2) +
-##   geom_point(size = 2) +
-##   theme_minimal() +
-##   labs(
-##     title = "RMSE by temperature decile (test data)",
-##     x = "Decile group (based on observed max temperature)",
-##     y = "RMSE",
-##     color = "Model"
-##   )
-## # local({
-## #   op <- par(no.readonly = TRUE); on.exit(par(op), add = TRUE)
-## # 
-## #   par(mfrow = c(6, 3),
-## #       mar = c(3, 3, 3, 1),  
-## #       oma = c(0, 0, 0, 0),     # outer margins a 0
-## #       mgp = c(1.3, 0.4, 0))    # distancia de ejes/labels
-## # 
-## #   for (col in names(correlations)) {
-## #     x <- X_corr[[col]]
-## #     y <- y_corr
-## #     ok <- is.finite(x) & is.finite(y); x <- x[ok]; y <- y[ok]
-## # 
-## #     plot(x, y,
-## #          main = paste("Next-day Max Temp vs", col),
-## #          xlab = col, ylab = "Next-day Max Temp (°C)",
-## #          pch = 16, cex = 0.5, col = rgb(0,0,0.55,0.25))
-## #     abline(lm(y ~ x), col = rgb(0.8,0,0,0.9), lwd = 1.4)
-## #   }
-## # })
-## 
-## knitr::include_graphics("scatterplot.png")
+## # ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
+## #   geom_line(size = 1.2) +
+## #   geom_point(size = 2) +
+## #   theme_minimal() +
+## #   labs(
+## #     title = "RMSE by temperature decile (test data)",
+## #     x = "Decile group (based on observed max temperature)",
+## #     y = "RMSE",
+## #     color = "Model"
+## #   )
+## p
 ## # Plot
 ## ggplot(corr_df, aes(x = label, y = corr, fill = corr > 0)) +
 ##   geom_col(width = 0.75) +
@@ -1105,6 +1205,46 @@ G10 (hottest) &  &  \\
 ## plot(pca_model, type = "b", main = "Scree Plot",
 ##      xlim = c(0.5, length(pca_model$sdev) + 0.5))  # pad the ends so bars/points aren’t clipped
 ## par(op)
+## perm_range <- permtestPCA(X_train)
+## p12
+## p12 + p23
+## biplot(pca_model, scale = 0)
+## 
+## fviz_pca_biplot(pca_model)
+## ggplot(df_boot, aes(x = vaf)) +
+##   geom_histogram(aes(y = ..density..),
+##                  bins = 40, fill = "skyblue3", color = "white", alpha = 0.6) +
+##   geom_density(color = "darkblue", linewidth = 1) +
+##   geom_vline(xintercept = vaf_k_hat, color = "red", linetype = "solid", linewidth = 1) +
+##   geom_vline(xintercept = ci[1], color = "darkred", linetype = "dashed", linewidth = 1) +
+##   geom_vline(xintercept = ci[2], color = "darkred", linetype = "dashed", linewidth = 1) +
+##   labs(
+##     title = "Bootstrap distribution of total variance explained (first 4 PCs)",
+##     x = "Total variance explained",
+##     y = "Density",
+##     subtitle = sprintf("Red line = point estimate (%.2f%%)\nDashed = 95%% CI [%.2f%%, %.2f%%]",
+##                        100*vaf_k_hat, 100*ci[1], 100*ci[2])
+##   ) +
+##   theme_classic(base_size = 13)
+## hist(vaf_boot,
+##      breaks = 30,
+##      main = sprintf("Bootstrap Distribution of VAF for First %d PCs", k),
+##      xlab = "VAF (Variance Accounted For)",
+##      col = "skyblue", border = "white")
+## abline(v = vaf_k_hat, col = "red", lwd = 2, lty = 2)
+## abline(v = ci, col = "darkgreen", lwd = 2, lty = 3)
+## legend("topright", legend = c("Point Estimate", "95% CI"),
+##        col = c("red", "darkgreen"), lty = c(2, 3), bty = "n")
+## ggplot(rmse_long, aes(x = group, y = RMSE, color = Model, group = Model)) +
+##   geom_line(size = 1.2) +
+##   geom_point(size = 2) +
+##   theme_classic() +
+##   labs(
+##     title = "RMSE by temperature decile (test data)",
+##     x = "Decile group (based on observed max temperature)",
+##     y = "RMSE",
+##     color = "Model"
+##   )
 ## # Extract ONLY the code from R chunks in this Rmd and print it as one block
 ## lines <- readLines(knitr::current_input(), warn = FALSE)
 ## 
