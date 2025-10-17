@@ -781,7 +781,7 @@ sensitivity_table <- sens_pretty %>%
     booktabs = TRUE,
     align = c("l", "r", "r", "r", "r"),
     linesep = "",
-    caption = "Table A7 - PCR Sensitivity to Number of Components (k−1, k, k+1)"
+    caption = "PCR Sensitivity to Number of Components (k−1, k, k+1)"
   ) %>%
   add_header_above(
     c("PCR Sensitivity to Number of Components (k−1, k, k+1)" = 5),
